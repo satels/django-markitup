@@ -1,7 +1,8 @@
+from functools import partial
+
 from django.conf import settings
 from django.db import models
 from django.utils.safestring import mark_safe, SafeData
-from django.utils.functional import curry
 from django.core.exceptions import ImproperlyConfigured
 from markitup import widgets
 
@@ -13,7 +14,7 @@ def _get_render_func(dotted_path, **kwargs):
     # Don't coerce to unicode on python 2
     (module, func) = dotted_path.rsplit(str('.'), 1)
     func = getattr(__import__(module, {}, {}, [func]), func)
-    return curry(func, **kwargs)
+    return partial(func, **kwargs)
 
 
 try:
