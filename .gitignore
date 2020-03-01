@@ -8,3 +8,5 @@ HGREV
 .tox/
 Django-*.egg
 .idea
+*.wpr
+*.wpu

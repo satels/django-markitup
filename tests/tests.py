@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import json
 import re
 
@@ -25,11 +23,11 @@ class MarkupFieldTests(TestCase):
                                         body='replace this text')
 
         self.empty_post = Post.objects.create(title='empty post',
-                                        body='')
+                                              body='')
 
     def testUnicodeRender(self):
         self.assertEqual(str(self.post.body),
-                          u'replacement text')
+                         u'replacement text')
 
     def testLength(self):
         self.assertEqual(len(self.post.body), 16)
@@ -44,7 +42,7 @@ class MarkupFieldTests(TestCase):
 
     def testRendered(self):
         self.assertEqual(self.post.body.rendered,
-                          u'replacement text')
+                         u'replacement text')
 
     def testLoadBack(self):
         post = Post.objects.get(pk=self.post.pk)
@@ -117,15 +115,15 @@ class MarkupFieldSerializationTests(TestCase):
                         "body": "replace this thing",
                         "_body_rendered": "replacement thing",
                         "title": "example post",
-                        }
                     }
-                ]
-            )
+                }
+            ]
+        )
 
     def testDeserialize(self):
         self.assertEqual(list(serializers.deserialize("json",
-                                                       self.stream))[0].object,
-                          self.post)
+                                                      self.stream))[0].object,
+                         self.post)
 
 
 class MarkupFieldFormTests(TestCase):
@@ -135,14 +133,14 @@ class MarkupFieldFormTests(TestCase):
 
     def testWidget(self):
         self.assertEqual(self.form_class().fields['body'].widget.__class__,
-                          MarkupTextarea)
+                         MarkupTextarea)
 
     def testFormFieldContents(self):
         form = self.form_class(instance=self.post)
         required = getattr(form, 'use_required_attribute', False)
         self.assertHTMLEqual(str(form['body']),
-                          u'<textarea id="id_body" rows="10" cols="40" name="body"{0}>**markdown**</textarea>'
-                          .format(' required' if required else ''))
+                             u'<textarea id="id_body" rows="10" cols="40" name="body"{0}>**markdown**</textarea>'
+                             .format(' required' if required else ''))
 
     def testAdminFormField(self):
         ma = admin.ModelAdmin(Post, admin.site)
@@ -352,7 +350,7 @@ class TemplatetagMediaUrlTests(MIUTestCase):
         ('http://www.example.com/jquery.min.js', 'http://www.example.com/jquery.min.js'),
         ('https://www.example.com/jquery.min.js', 'https://www.example.com/jquery.min.js'),
         (None, None)
-        )
+    )
 
     # MARKITUP_SET settings and resulting CSS link
     set_urls = (
@@ -364,7 +362,7 @@ class TemplatetagMediaUrlTests(MIUTestCase):
         ('http://www.example.com/path/', 'http://www.example.com/path/%(file)s'),
         ('https://www.example.com/path', 'https://www.example.com/path/%(file)s'),
         ('https://www.example.com/path/', 'https://www.example.com/path/%(file)s'),
-        )
+    )
 
     skin_urls = set_urls
 
@@ -387,7 +385,7 @@ class TemplatetagMediaUrlTests(MIUTestCase):
                             '<script type="text/javascript" src="%(prefix)s/markitup/jquery.markitup.js"></script>\n'
                             '<script type="text/javascript" src="%(prefix)s/markitup/sets/default/set.js"></script>'
                             % {'prefix': self.prefix}
-                            ))
+                        ))
         finally:
             settings.JQUERY_URL = _old_jquery_url
 

@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import posixpath
 from django import forms
 from django.contrib.admin.widgets import AdminTextareaWidget
@@ -11,7 +9,6 @@ except ImportError:
 from django.utils.safestring import mark_safe
 from markitup import settings
 from markitup.util import absolute_url
-
 
 
 class MarkupInput(forms.Widget):
@@ -50,6 +47,7 @@ class MarkItUpWidget(MarkupTextarea):
         directory.  Default: value of MARKITUP_SKIN setting.
 
     """
+
     def __init__(self, attrs=None,
                  markitup_set=None,
                  markitup_skin=None,
@@ -87,8 +85,8 @@ class MarkItUpWidget(MarkupTextarea):
 
         html += render_to_string('markitup/editor.html',
                                  {'textarea_id': final_attrs['id'],
-                                 'AUTO_PREVIEW': self.auto_preview,
-                                 'preview_url': preview_url})
+                                  'AUTO_PREVIEW': self.auto_preview,
+                                  'preview_url': preview_url})
 
         return mark_safe(html)
 

@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 
 try:
     from docutils.core import publish_parts

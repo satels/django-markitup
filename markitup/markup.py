@@ -27,14 +27,13 @@ django-template-utils_.
 .. _django-template-utils: http://code.google.com/p/django-template-utils/
 
 """
-from __future__ import unicode_literals
 
 from functools import partial, wraps
 
 from markitup.settings import MARKITUP_PREVIEW_FILTER
 
 if MARKITUP_PREVIEW_FILTER is None:
-    filter_func = lambda text: text
+    def filter_func(text): return text
 else:
     filter_path, filter_kwargs = MARKITUP_PREVIEW_FILTER
     # Don't coerce to unicode on python 2

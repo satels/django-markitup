@@ -1,20 +1,20 @@
-from __future__ import unicode_literals
-
 from django.conf import settings
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.safestring import mark_safe, SafeData
 from django.utils.functional import curry
 from django.core.exceptions import ImproperlyConfigured
 from markitup import widgets
 
-_rendered_field_name = lambda name: '_%s_rendered' % name
+
+def _rendered_field_name(name): return '_%s_rendered' % name
+
 
 def _get_render_func(dotted_path, **kwargs):
     # Don't coerce to unicode on python 2
     (module, func) = dotted_path.rsplit(str('.'), 1)
     func = getattr(__import__(module, {}, {}, [func]), func)
     return curry(func, **kwargs)
+
 
 try:
     render_func = _get_render_func(settings.MARKITUP_FILTER[0],
@@ -25,7 +25,7 @@ except ImportError as e:
 except AttributeError as e:
     raise ImproperlyConfigured("MARKITUP_FILTER setting is required")
 
-@python_2_unicode_compatible
+
 class Markup(SafeData):
     def __init__(self, instance, field_name, rendered_field_name):
         # instead of storing actual values store a reference to the instance
@@ -37,6 +37,7 @@ class Markup(SafeData):
     # raw is read/write
     def _get_raw(self):
         return self.instance.__dict__[self.field_name]
+
     def _set_raw(self, val):
         setattr(self.instance, self.field_name, val)
     raw = property(_get_raw, _set_raw)
@@ -79,6 +80,7 @@ class MarkupDescriptor(object):
             setattr(obj, self.rendered_field_name, value.rendered)
         else:
             obj.__dict__[self.field.name] = value
+
 
 class MarkupField(models.TextField):
     def __init__(self, *args, **kwargs):
@@ -130,6 +132,7 @@ class MarkupField(models.TextField):
         field = super(MarkupField, self).formfield(**defaults)
         field.hidden_widget = widgets.MarkupHiddenWidget
         return field
+
 
 # register MarkupField to use the custom widget in the Admin
 from django.contrib.admin.options import FORMFIELD_FOR_DBFIELD_DEFAULTS
